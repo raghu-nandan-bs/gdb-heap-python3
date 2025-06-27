@@ -457,7 +457,7 @@ def as_python_object(addr):
 
         PYGC_REFS_REACHABLE = -3
 
-        if gc_ptr['gc']['gc_refs'] == PYGC_REFS_REACHABLE:  # FIXME: need to cover other values
+        if gc_ptr['gc_refs'] == PYGC_REFS_REACHABLE:  # FIXME: need to cover other values
             pyop = is_pyobject_ptr(gdb.Value(addr + _type_PyGC_Head.sizeof))
             if pyop:
                 return pyop

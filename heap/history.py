@@ -16,6 +16,7 @@
 
 import datetime
 from heap import iter_usage_with_progress, fmt_size, fmt_addr, sign
+from functools import cmp_to_key
 
 class Snapshot(object):
     '''Snapshot of the state of the heap'''
@@ -91,7 +92,7 @@ class Diff(object):
             result += '  (none)\n'
             return result
         for usage in sorted(set_of_usage,
-                            lambda u1, u2: cmp(u1.start, u2.start)):
+                            key=cmp_to_key(lambda u1, u2: cmp(u1.start, u2.start))):
             result += ('  %s -> %s %8i bytes %20s |%s\n'
                        % (fmt_addr(usage.start),
                           fmt_addr(usage.start + usage.size-1),
