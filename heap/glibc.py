@@ -68,7 +68,7 @@ class MChunkPtr(WrappedPointer):
 
     def size(self):
         if not(hasattr(self, '_cached_size')):
-            self._cached_size = int(self.field('size'))
+            self._cached_size = int(self.field('mchunk_size'))
         return self._cached_size
 
     def chunksize(self):

@@ -20,6 +20,7 @@ import sys
 
 from heap.glibc import glibc_arenas
 from heap.history import history, Snapshot, Diff
+from functools import cmp_to_key
 
 from heap import lazily_get_usage_list, \
     fmt_size, fmt_addr, \
@@ -73,7 +74,7 @@ class Heap(gdb.Command):
 
         t = Table(['Domain', 'Kind', 'Detail', 'Count', 'Allocated size'])
         for category in sorted(total_by_category.keys(),
-                               key=total_by_category.get,
+                               key=cmp_to_key(total_by_category.get),
                                reverse=True):
             detail = category.detail
             if not detail:
@@ -115,7 +116,7 @@ class HeapSizes(gdb.Command):
             pass # FIXME
         t = Table(['Chunk size', 'Num chunks', 'Allocated size'])
         for size in sorted(chunks_by_size.keys(),
-                           lambda s1, s2: chunks_by_size[s2] * s2 - chunks_by_size[s1] * s1):
+                           key=cmp_to_key(lambda s1, s2: chunks_by_size[s2] * s2 - chunks_by_size[s1] * s1)):
             t.add_row([fmt_size(size),
                        chunks_by_size[size],
                        fmt_size(chunks_by_size[size] * size)])
