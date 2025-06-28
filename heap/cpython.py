@@ -298,7 +298,12 @@ class PyDictObjectPtr(PyObjectPtr):
     _typename = 'PyDictObject'
 
     def categorize_refs(self, usage_set, level=0, detail=None):
-        ma_table = int(self.field('ma_table'))
+        try:
+            ma_table = int(self.field('ma_table'))
+        except gdb.error:
+            # Python 3.10+ dict has no ma_table; skip dict internals
+            return False
+
         usage_set.set_addr_category(ma_table,
                                     Category('cpython', 'PyDictEntry table', detail),
                                     level)
