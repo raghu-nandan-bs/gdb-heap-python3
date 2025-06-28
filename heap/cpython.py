@@ -277,10 +277,17 @@ class PyUnicodeObjectPtr(PyObjectPtr):
     _typename = 'PyUnicodeObject'
 
     def categorize_refs(self, usage_set, level=0, detail=None):
-        m_str = int(self.field('str'))
-        usage_set.set_addr_category(m_str,
-                                    Category('cpython', 'PyUnicodeObject buffer', detail),
-                                    level)
+        try:
+            m_str = int(self.field('str'))
+        except gdb.error:
+            # no 'str' member on this build – skip Unicode buffer
+            return False
+
+        usage_set.set_addr_category(
+            m_str,
+            Category('cpython', 'PyUnicodeObject buffer', detail),
+            level
+        )
         return True
 
 class PyDictObjectPtr(PyObjectPtr):
