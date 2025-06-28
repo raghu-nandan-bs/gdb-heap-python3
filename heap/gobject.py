@@ -25,7 +25,15 @@ from heap import WrappedPointer, WrappedValue, caching_lookup_type, type_char_pt
 dir_ = '/usr/share/glib-2.0/gdb'
 if not dir_ in sys.path:
     sys.path.insert(0, dir_)
-from glib import read_global_var, g_quark_to_string
+# Try to import the old PyGTK glib bindings; if not present, stub out
+try:
+    from glib import read_global_var, g_quark_to_string
+except ImportError:
+    def read_global_var(name):
+        return None
+
+    def g_quark_to_string(quark):
+        return ""
 
 
 # This was adapted from glib's gobject.py:g_type_to_name
